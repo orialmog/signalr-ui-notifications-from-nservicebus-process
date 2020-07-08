@@ -117,9 +117,7 @@
                     var viewModel = new BusinessProcess(i);
                     viewModel.hub = notificationHub;
 
-                    $('#viewport').append($('<div id="container-' +
-                        viewModel.id +
-                        '"><div data-bind="dynaTemplate: state"></div></div>'));
+                    $('#viewport').append($('<div id="container-' + viewModel.id + '"><div data-bind="dynaTemplate: state"></div></div>'));
                     var $vm = $('#container-' + viewModel.id);
 
                     ko.applyBindings(viewModel, $vm.get(0));
