@@ -45,14 +45,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BusyEvent.cs" />
-    <Compile Include="BusyMessage.cs" />
-    <Compile Include="ElementUpdate.cs" />
-    <Compile Include="LoadingEvent.cs" />
-    <Compile Include="NotificationEvent.cs" />
+    <Compile Include="Events\BusyEvent.cs" />
+    <Compile Include="Commands\UIElementUpdate.cs" />
+    <Compile Include="IHaveData.cs" />
+    <Compile Include="Events\LoadingEvent.cs" />
+    <Compile Include="Events\NotificationEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReadyEvent.cs" />
-    <Compile Include="UIStateEnum.cs" />
+    <Compile Include="Events\ReadyEvent.cs" />
+    <Compile Include="Enums\UIStateEnum.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

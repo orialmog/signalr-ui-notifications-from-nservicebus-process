@@ -28,7 +28,7 @@ namespace WaitForEventLocking.Controllers
                 MessageId = Guid.NewGuid(),
                 UIElementId = model.Id 
             });
-            return Json(new { State = UIStateEnum.Busy.ToString() });
+            return Json(new { Ok = true });
         }
 
     }

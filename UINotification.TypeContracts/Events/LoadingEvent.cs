@@ -5,5 +5,7 @@
         public LoadingEvent() : base(UIStateEnum.Loading)
         {
         }
+
+
     }
 }

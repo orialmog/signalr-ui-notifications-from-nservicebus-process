@@ -7,12 +7,12 @@ using UINotifications.TypeContracts;
 namespace SomeLongRunningProcess.ServiceHost
 {
     public class SomeLongRunningProcessCommandHandler :
-        IHandleMessages<ElementUpdate>,
+        IHandleMessages<UIElementUpdate>,
         IHandleMessages<SomeLongRunningProcessCommand> 
     {
         public IBus Bus { get; set; }
 
-        public void Handle(ElementUpdate message)
+        public void Handle(UIElementUpdate message)
         {
             Bus.Publish(new BusyEvent()
             {
@@ -22,18 +22,18 @@ namespace SomeLongRunningProcess.ServiceHost
 
         public void Handle(SomeLongRunningProcessCommand message)
         {
-            Console.WriteLine("SomeLongRunningProcess -> Started.");
 
-            var time = new Random().Next(3000, 10000);
+            var time = new Random().Next(3000, 5000);
+
+            Console.WriteLine("SomeLongRunningProcess -> Started.");
             Console.WriteLine($"SomeLongRunningProcess -> Sleep {time} .");
             Thread.Sleep(time);
-
-
             Console.WriteLine("SomeLongRunningProcess -> Finished.");
 
             Bus.Publish(new ReadyEvent()
             {
-                UIElementId = message.UIElementId
+                UIElementId = message.UIElementId,
+                Data = time
             });
         }
 

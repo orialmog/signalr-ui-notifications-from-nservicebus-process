@@ -6,5 +6,6 @@
         public BusyEvent() : base(UIStateEnum.Busy)
         {
         }
+
     }
 }

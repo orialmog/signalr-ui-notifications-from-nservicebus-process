@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNet.SignalR;
 using NServiceBus;
@@ -7,19 +8,22 @@ using UINotifications.TypeContracts;
 namespace UINotification.ServiceHost
 {
     public class UINotificationHandler :
-        IHandleMessages<BusyMessage>,
         IHandleMessages<NotificationEvent>
     {
         public void Handle(NotificationEvent message)
         {
-
-            var context = GlobalHost.ConnectionManager.GetHubContext<UINotificationHub>();
             if (message.UIElementId != string.Empty)
             {
-                UINotificationHub.UIState[message.UIElementId] = message.State; 
-                context.Clients.All.Notify(message.UIElementId, message.State.ToString());
-                Console.WriteLine(
-                    $"NotificationHandler -> Sent UINotification to ui {message.UIElementId} with {message.State}");
+                UINotificationHub.UIState[message.UIElementId] = message.State;
+                var context = GlobalHost.ConnectionManager.GetHubContext<UINotificationHub>();
+                var connectionIds = UINotificationHub.UIUsers.ContainsKey(message.UIElementId) ? UINotificationHub.UIUsers[message.UIElementId] : new List<string>();
+                var hasData = message.GetType().GetInterfaces().Any(x =>  x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IHaveData<>));
+                var data = hasData ? ((dynamic) message).Data : null;
+                foreach (var connectionId in connectionIds.ToArray())
+                {
+                    context.Clients.Client(connectionId).Notify(message.UIElementId, message.State.ToString(), data);
+                }
+                Console.WriteLine($"NotificationHandler -> Sent UINotification to ui {message.UIElementId} with {message.State}");
             }
             else
             {
@@ -28,22 +32,10 @@ namespace UINotification.ServiceHost
 
         }
 
-        public void Handle(BusyMessage message)
-        {
-            var context = GlobalHost.ConnectionManager.GetHubContext<UINotificationHub>();
-            if (message.UIElementId != string.Empty)
-            {
-                UINotificationHub.UIState[message.UIElementId] = UIStateEnum.Busy;
-                context.Clients.All.Notify(message.UIElementId, UIStateEnum.Busy.ToString());
-                Console.WriteLine(
-                    $"NotificationHandler -> Sent UINotification to ui {message.UIElementId} with {UIStateEnum.Busy}");
-            }
-            else
-            {
-                Console.WriteLine("NotificationHandler -> No one to hear " + message.UIElementId);
-            }
 
-        }
+
+
+
     }
 
 }
